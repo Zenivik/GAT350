@@ -3,7 +3,6 @@
 #include <iostream>
 
 
-
 bool Image::Load(const std::string& filename, uint8_t alpha)
 {
     std::ifstream stream(filename, std::ios::binary);
@@ -54,6 +53,7 @@ bool Image::Load(const std::string& filename, uint8_t alpha)
     }
 
     delete[] data;
+    stream.close();
     return true;
 }
 
