@@ -2,6 +2,8 @@
 #include "Framebuffer.h"
 #include "Image.h"
 #include "PostProcess.h"
+#include "Tracer.h"
+#include "Scene.h"
 
 #include <iostream>
 #include <SDL.h>
@@ -16,9 +18,17 @@ int main(int, char**)
 
 	std::unique_ptr<Framebuffer> framebuffer = std::make_unique<Framebuffer>(renderer.get(), renderer->width, renderer->height);
 
-	std::unique_ptr<Image> image = std::make_unique<Image>();
-	image->Load("../Resources/flower.bmp", 126);
-	image->Flip();
+	// ray tracer
+	std::unique_ptr<Tracer> tracer = std::make_unique<Tracer>();
+
+
+
+	// scene
+	std::unique_ptr<Scene> scene = std::make_unique<Scene>();
+	/*std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(glm::vec3{ 0, 0, -10 }, 3.0f);
+	scene->Add(std::move(sphere));*/
+
+	scene->Add(std::move(std::make_unique<Plane>(glm::vec3{ 0, -5, 0 }, glm::vec3{ 0, 1, 0 })));
 
 	bool quit = false;
 	SDL_Event event;
@@ -32,78 +42,9 @@ int main(int, char**)
 			break;
 		}
 
-		framebuffer->Clear({ 0, 0 , 0, 0 });
+		framebuffer->Clear({ 0, 0, 0, 0 });
 
-		/*for (int i = 0; i < 50; i++)
-		{
-			framebuffer->DrawPoint(rand() % renderer->width, rand() % renderer->height, { 255, 0, 0, 255 });
-		}
-		 */
-
-		for (int i = 0; i < 10; i++)
-		{
-			framebuffer->DrawRect(rand() % renderer->width, rand() % renderer->height, 50, 50, { (uint8_t)((rand() % 2) * 255), (uint8_t)((rand() % 2) * 255), (uint8_t)((rand() % 2) * 255), 64 });
-		}
-		
-		/*for (int i = 0; i < 50; i++)
-		{
-			framebuffer->DrawLine(renderer->width >> 1, renderer->height >> 1, rand() % renderer->width, rand() % renderer->height, { 0, 0, 255, 255 });
-		}*/
-
-		/*for (int i = 0; i < 1; i++)
-		{
-			framebuffer->DrawTriangle(300, 300, 400, 400, 400, 300, { 255, 155, 0, 155 });
-		}*/
-
-		/*for (int i = 0; i < 2; i++)
-		{
-			framebuffer->DrawCircle(renderer->width >> 1, renderer->height >> 1, rand() % renderer->height, { 0, 255, 0, 255 });
-		}*/
-
-		/*framebuffer->DrawSimpleCurve(200, 200, 300, 100, 3, { 255, 255, 255, 255 });
-
-		for (int i = 0; i < 10; i++)
-		{
-			framebuffer->DrawQuadraticCurve(
-				rand() % renderer->width, rand() % renderer->height,
-				rand() % renderer->width, rand() % renderer->height,
-				rand() % renderer->width, rand() % renderer->height, 30, { 255, 255, 0, 255 });
-		}
-		for (int i = 0; i < 10; i++)
-		{
-			framebuffer->DrawCubicCurve(
-				rand() % renderer->width, rand() % renderer->height,
-				rand() % renderer->width, rand() % renderer->height,
-				rand() % renderer->width, rand() % renderer->height,
-				rand() % renderer->width, rand() % renderer->height,
-				30, { 0, 255, 255, 255 });
-		}*/
-
-		framebuffer->DrawImage(30, 30, image.get());
-
-		std::unique_ptr<Image> image1 = std::make_unique<Image>(*image.get());
-		PostProcess::BoxBlur(image1->colorBuffer);
-		framebuffer->DrawImage(0, 300, image1.get());
-
-		std::unique_ptr<Image> image2 = std::make_unique<Image>(*image.get());
-		PostProcess::GaussianBlur(image2->colorBuffer);
-		framebuffer->DrawImage(200, 300, image2.get());
-
-		std::unique_ptr<Image> image3 = std::make_unique<Image>(*image.get());
-		PostProcess::Sharpen(image3->colorBuffer);
-		framebuffer->DrawImage(400, 300, image3.get());
-
-		std::unique_ptr<Image> image4 = std::make_unique<Image>(*image.get());
-		PostProcess::Monochrome(image4->colorBuffer);
-		PostProcess::Edge(image4->colorBuffer, 0);
-		framebuffer->DrawImage(600, 300, image4.get());
-
-		//PostProcess::Invert(framebuffer->colorBuffer);
-		//PostProcess::Monochrome(framebuffer->colorBuffer);
-		//PostProcess::Noise(framebuffer->colorBuffer, 100);
-		//PostProcess::Brightness(framebuffer->colorBuffer, -100);
-		//PostProcess::ColorBalance(framebuffer->colorBuffer, 0, 0, 100);
-		//PostProcess::Threshold(framebuffer->colorBuffer, 200);
+		tracer->Trace(framebuffer->colorBuffer, scene.get());
 
 		framebuffer->Update();
 
