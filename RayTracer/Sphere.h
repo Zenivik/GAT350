@@ -9,11 +9,7 @@ public:
         center(center),
         radius(radius) {}
 
-
-
-    bool Hit(const ray_t& r, float tMin, float tMax, raycastHit_t& hit) override;
-
-
+    bool Hit(const ray_t& ray, float tMin, float tMax, raycastHit_t& hit) override;
 
 public:
     glm::vec3 center;
