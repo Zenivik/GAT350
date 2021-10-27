@@ -11,7 +11,7 @@ bool Sphere::Hit(const ray_t& ray, float tMin, float tMax, raycastHit_t& hit)
     // b = ray direction is facing away from sphere
     if (c > 0 && b > 0) return false;
 
-    // b^2 - 4ac 
+    // b^2 - 4ac
     float discriminant = (b * b) - (4 * a * c);
 
     // discriminant == 0 - one intersection, discriminant > 0 - two intersections
