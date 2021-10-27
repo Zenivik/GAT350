@@ -37,4 +37,33 @@ bool Sphere::Hit(const ray_t& ray, float tMin, float tMax, raycastHit_t& hit)
     }
 
     return false;
+
+    // discriminant == 0 - one intersection, discriminant > 0 - two intersections
+    if (discriminant >= 0)
+    {
+        float t = (-b - sqrt(discriminant)) / (2 * a);
+        if (t > tMin && t < tMax)
+        {
+            hit.t = t;
+            hit.point = ray.pointAt(hit.t);
+            hit.normal = (hit.point - center) / radius;
+            return true;
+        }
+
+
+
+        t = (-b + sqrt(discriminant)) / (2 * a);
+        if (t > tMin && t < tMax)
+        {
+            hit.t = t;
+            hit.point = ray.pointAt(hit.t);
+            hit.normal = (hit.point - center) / radius;
+            return true;
+        }
+    }
+
+
+
+
+    return false;
 }
