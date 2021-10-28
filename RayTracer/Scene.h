@@ -3,6 +3,7 @@
 #include "Ray.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "Material.h"
 
 #include <memory>
 #include <vector>

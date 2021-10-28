@@ -17,7 +17,7 @@ void Tracer::Trace(const ColorBuffer& colorBuffer, Scene* scene)
 				point.x = x / (float)colorBuffer.width;
 				point.y = 1 - (y / (float)colorBuffer.height);
 
-				glm::vec3 direction = glm::vec3{ (point * 2.0f) - 1.0f, 1 };
+				glm::vec3 direction = glm::vec3{ (point * 2.0f) - 1.0f, -1 };
 				direction.y /= aspectRatio;
 				direction = glm::normalize(direction);
 
