@@ -35,8 +35,8 @@ glm::vec2 Camera::ScreenToViewport(const glm::vec2& screen)
 {
 	glm::vec2 viewport{ 0, 0 };
 
-	viewport.x = screen.x / 800;
-	viewport.y = screen.y / 600;
+	viewport.x = (float)screen.x / screenSize.x;
+	viewport.y = (float)screen.y / screenSize.y;
 
 	return viewport;
 }
